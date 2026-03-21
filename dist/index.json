@@ -2,8 +2,8 @@
   "catalogName": "MIL Traducoes",
   "channel": "stable",
   "schemaVersion": "1.0",
-  "catalogRevision": "2026.03.19.1",
-  "generatedAt": "2026-03-19T18:54:48Z",
+  "catalogRevision": "2026.03.21.1",
+  "generatedAt": "2026-03-21T22:29:32Z",
   "entries": [
     {
       "author": "M.I.L.",
@@ -88,6 +88,101 @@
         "traducao",
         "layeredfs"
       ]
+    },
+    {
+      "author": "denis",
+      "detailsUrl": "https://www.miltraducoes.com/post/i-am-setsuna-porte-da-tradu%C3%A7%C3%A3o-para-switch",
+      "language": "pt-BR",
+      "id": "i-am-setsuna-ptbr",
+      "section": "translations",
+      "titleId": "0100849000BDA000",
+      "name": "I Am Setsuna - PT-BR",
+      "summary": "Porte para Switch da traducao em portugues do Brasil de I Am Setsuna, com interface adaptada e texturas traduzidas.",
+      "packageVersion": "1.1.0",
+      "contentRevision": "2025.12.19",
+      "downloadUrl": "https://mega.nz/file/2FEhBChA#yJ6X2pFWygCeSlXNAz2BWbhxe5QlDxlvhV3CnjOBXqU",
+      "compatibility": {
+        "exactGameVersions": [
+          "1.1.0"
+        ]
+      },
+      "tags": [
+        "traducao",
+        "layeredfs",
+        "port"
+      ],
+      "featured": false
+    },
+    {
+      "author": "denis",
+      "detailsUrl": "https://www.miltraducoes.com/post/tradu%C3%A7%C3%A3o-pt-br-patapon-1-2-replay",
+      "language": "pt-BR",
+      "id": "patapon-12-replay-ptbr",
+      "section": "translations",
+      "titleId": "01006DC020DB8000",
+      "name": "PATAPON 1+2 REPLAY - PT-BR",
+      "summary": "Traducao em portugues do Brasil para PATAPON 1+2 REPLAY, com localizacao quase completa para Switch.",
+      "packageVersion": "1.0.6",
+      "contentRevision": "2025.09.23",
+      "downloadUrl": "https://mega.nz/file/aNFCABJB#MZ6QXpzFhakOk2h-v_m_35KkWJ_sXs8CjJTr_URFxpg",
+      "compatibility": {
+        "exactGameVersions": [
+          "1.0.4",
+          "1.0.6"
+        ]
+      },
+      "tags": [
+        "traducao",
+        "layeredfs"
+      ],
+      "featured": false
+    },
+    {
+      "author": "denis e juniorpassos",
+      "detailsUrl": "https://www.miltraducoes.com/post/tradu%C3%A7%C3%A3o-pt-br-puzzle-quest-immortal-edition",
+      "language": "pt-BR",
+      "id": "puzzle-quest-immortal-edition-ptbr",
+      "section": "translations",
+      "titleId": "01001110232DA000",
+      "name": "Puzzle Quest Immortal Edition - PT-BR",
+      "summary": "Traducao em portugues do Brasil para Puzzle Quest Immortal Edition com suporte as versoes recentes de Switch.",
+      "packageVersion": "1.0.3.3576",
+      "contentRevision": "2025.12.28",
+      "downloadUrl": "https://mega.nz/file/DRs3wJKb#f68ZRYVyk_RxxbDFpSW4eVcB1H_tSCGGWx1ScwjRmJE",
+      "compatibility": {
+        "exactGameVersions": [
+          "1.0.0.3380",
+          "1.0.3.3576"
+        ]
+      },
+      "tags": [
+        "traducao",
+        "layeredfs"
+      ],
+      "featured": false
+    },
+    {
+      "author": "Junior Passos",
+      "detailsUrl": "https://miltraducoes.com/",
+      "language": "pt-BR",
+      "id": "synth-riders-ptbr",
+      "section": "translations",
+      "titleId": "010022E0247B2000",
+      "name": "Synth Riders - PT-BR",
+      "summary": "Traducao em portugues do Brasil para Synth Riders, distribuida em pacote para instalacao via layout de SD.",
+      "packageVersion": "0.1.1a1",
+      "contentRevision": "2026.03.21",
+      "downloadUrl": "https://mega.nz/file/Lc8wGYRQ#dGS_NKgCq4n9yL-gS3Ntkigq5iiXJ4ZWLhCLYDfGxq4",
+      "compatibility": {
+        "exactGameVersions": [
+          "0.1.1a1"
+        ]
+      },
+      "tags": [
+        "traducao",
+        "layeredfs"
+      ],
+      "featured": false
     }
   ]
 }
