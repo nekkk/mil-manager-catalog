@@ -5,12 +5,35 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_PATH = ROOT / "catalog-source" / "catalog-source.json"
+SOURCE_DIR = ROOT / "catalog-source"
+METADATA_PATH = SOURCE_DIR / "catalog-metadata.json"
+ENTRIES_DIR = SOURCE_DIR / "entries"
+LEGACY_SOURCE_PATH = SOURCE_DIR / "catalog-source.json"
 DIST_PATHS = [
     ROOT / "dist" / "index.json",
 ]
 
 REQUIRED_FIELDS = ("id", "section", "titleId", "name", "downloadUrl")
+
+
+def load_source() -> dict:
+    if METADATA_PATH.exists() and ENTRIES_DIR.exists():
+        metadata = json.loads(METADATA_PATH.read_text(encoding="utf-8"))
+        entries = []
+        for path in sorted(ENTRIES_DIR.glob("*.json")):
+            entry = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(entry, dict):
+                raise ValueError(f"Entrada invalida em {path}")
+            entries.append(entry)
+        metadata["entries"] = entries
+        return metadata
+
+    if LEGACY_SOURCE_PATH.exists():
+        return json.loads(LEGACY_SOURCE_PATH.read_text(encoding="utf-8"))
+
+    raise FileNotFoundError(
+        f"Fonte do catalogo nao encontrada. Esperado: {METADATA_PATH} + {ENTRIES_DIR} ou {LEGACY_SOURCE_PATH}"
+    )
 
 
 def normalize_entry(entry: dict, defaults: dict) -> dict:
@@ -38,7 +61,7 @@ def normalize_entry(entry: dict, defaults: dict) -> dict:
 
 
 def build_index() -> dict:
-    source = json.loads(SOURCE_PATH.read_text(encoding="utf-8"))
+    source = load_source()
     defaults = source.get("defaults") or {}
     entries = [normalize_entry(entry, defaults) for entry in source.get("entries", [])]
     entries.sort(key=lambda item: (item.get("section", ""), item.get("name", "").lower()))

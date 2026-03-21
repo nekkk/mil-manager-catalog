@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 import json
 import os
+import shutil
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST_INDEX = ROOT / "dist" / "index.json"
 SITE_DIR = ROOT / "site"
+SITE_SRC_DIR = ROOT / "site-src"
 SITE_INDEX_JSON = SITE_DIR / "index.json"
 SITE_INDEX_HTML = SITE_DIR / "index.html"
 SITE_NOJEKYLL = SITE_DIR / ".nojekyll"
@@ -100,7 +102,8 @@ def build_html(index_data: dict) -> str:
     <ul>
       <li>Use este endpoint no app via <code>catalog_url=https://seu-endereco/index.json</code>.</li>
       <li>Os pacotes ZIP podem continuar hospedados no MEGA ou em outra origem.</li>
-      <li>O conteudo deste site e gerado automaticamente a partir de <code>catalog-source.json</code>.</li>
+      <li>O conteudo deste site e gerado automaticamente a partir de <code>catalog-source/</code>.</li>
+      <li>Painel administrativo: <code>/admin/</code></li>
     </ul>
   </main>
 </body>
@@ -115,6 +118,14 @@ def main() -> int:
     index_data = json.loads(DIST_INDEX.read_text(encoding="utf-8"))
 
     SITE_DIR.mkdir(parents=True, exist_ok=True)
+    if SITE_SRC_DIR.exists():
+        for source_path in SITE_SRC_DIR.rglob("*"):
+            if source_path.is_dir():
+                continue
+            relative_path = source_path.relative_to(SITE_SRC_DIR)
+            target_path = SITE_DIR / relative_path
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source_path, target_path)
     SITE_INDEX_JSON.write_text(DIST_INDEX.read_text(encoding="utf-8"), encoding="utf-8")
     SITE_INDEX_HTML.write_text(build_html(index_data), encoding="utf-8")
     SITE_NOJEKYLL.write_text("", encoding="utf-8")

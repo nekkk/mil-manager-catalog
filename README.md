@@ -12,7 +12,8 @@ Homebrew para Nintendo Switch focado em distribuir e instalar traducoes, dublage
 - recibos de instalacao para remocao limpa em `sdmc:/config/mil-manager/receipts`
 - configuracao em `sdmc:/config/mil-manager/settings.ini`
 - deteccao de titulos instalados no console por `ns`
-- sincronizacao host-side para Ryujinx
+- cache normalizado de titulos sincronizados em `sdmc:/switch/mil_manager/installed-titles-cache.json`
+- sincronizacao host-side preparada para adapters de emulador
 
 ## Build
 
@@ -39,7 +40,14 @@ Fluxo em runtime:
 
 ## Fonte central do indice
 
-Edite [catalog-source.json](/Users/lordd/source/codex/mil-manager/catalog-source/catalog-source.json) e gere o indice final com:
+O catalogo agora usa uma estrutura mais facil de manter:
+
+- [catalog-metadata.json](/Users/lordd/source/codex/mil-manager/catalog-source/catalog-metadata.json)
+- pasta [entries](/Users/lordd/source/codex/mil-manager/catalog-source/entries)
+
+Cada item vive em seu proprio arquivo JSON dentro de `catalog-source/entries/`.
+
+Para gerar o indice final:
 
 ```powershell
 python tools\generate-index.py
@@ -62,7 +70,7 @@ Campos de controle no topo do indice:
 
 Fluxo recomendado para um endpoint estavel:
 
-1. editar [catalog-source.json](/Users/lordd/source/codex/mil-manager/catalog-source/catalog-source.json)
+1. editar [catalog-metadata.json](/Users/lordd/source/codex/mil-manager/catalog-source/catalog-metadata.json) e/ou os arquivos em [entries](/Users/lordd/source/codex/mil-manager/catalog-source/entries)
 2. gerar o catalogo com `python tools\generate-index.py`
 3. preparar o site do Pages com `python tools\prepare-pages-site.py`
 4. publicar pelo workflow [publish-catalog-pages.yml](/Users/lordd/source/codex/mil-manager/.github/workflows/publish-catalog-pages.yml)
@@ -83,6 +91,30 @@ Arquivos principais desse fluxo:
 - [publish-catalog-pages.yml](/Users/lordd/source/codex/mil-manager/.github/workflows/publish-catalog-pages.yml)
 - [settings.github-pages.example.ini](/Users/lordd/source/codex/mil-manager/docs/settings.github-pages.example.ini)
 
+## Painel administrativo
+
+Existe uma base de painel estatico em:
+
+- [admin/index.html](/Users/lordd/source/codex/mil-manager/site-src/admin/index.html)
+
+Fluxo pensado para GitHub Pages:
+
+1. abrir `/admin/`
+2. informar `owner`, repositorio, branch e token do GitHub
+3. carregar os arquivos em `catalog-source/`
+4. adicionar, editar, remover e publicar
+
+O painel publica alteracoes diretamente em:
+
+- `catalog-source/catalog-metadata.json`
+- `catalog-source/entries/*.json`
+
+Observacoes:
+
+- use um token fino com `Contents: Read and write`
+- publicar no branch principal dispara o workflow atual de Pages
+- o MVP publica arquivo por arquivo via GitHub API; isso ja resolve o fluxo operacional sem depender de backend proprio
+
 ## settings.ini
 
 Exemplo:
@@ -100,6 +132,27 @@ Valores de `scan_mode`:
 - `full`: tenta listar todos os jogos instalados pelo `ns` do console
 - `catalog`: sonda apenas os `titleId` presentes no catalogo
 - `off`: nao tenta detectar jogos instalados
+
+## Sincronizador de emulador
+
+O homebrew rodando dentro do emulador nao enxerga automaticamente as pastas da biblioteca do host. Por isso, o fluxo recomendado para emuladores e sincronizar os titulos detectados no host antes de abrir o app.
+
+Utilitario base:
+
+```powershell
+python tools\mil_emulator_sync.py --emulator ryujinx
+```
+
+Adapters conhecidos no roadmap:
+
+- `ryujinx`: implementado no Windows
+- `eden`: preparado para futura implementacao
+- `yuzu-like`: preparado para futura implementacao
+
+Saidas principais:
+
+- `sdmc:/switch/mil_manager/installed-titles-cache.json`
+- `sdmc:/switch/mil_manager/emulator-installed.json` como espelho legado de compatibilidade
 
 ## Ryujinx
 
@@ -126,6 +179,7 @@ powershell -ExecutionPolicy Bypass -File tools\start-ryujinx-with-sync.ps1
 Arquivos gerados na SD virtual:
 
 - `sdmc:/switch/mil_manager/index.json`
+- `sdmc:/switch/mil_manager/installed-titles-cache.json`
 - `sdmc:/switch/mil_manager/emulator-installed.json`
 
 ## Compatibilidade de versao
