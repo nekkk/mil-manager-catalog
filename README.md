@@ -46,6 +46,8 @@ O catalogo agora usa uma estrutura mais facil de manter:
 - pasta [entries](/Users/lordd/source/codex/mil-manager/catalog-source/entries)
 
 Cada item vive em seu proprio arquivo JSON dentro de `catalog-source/entries/`.
+Durante a geracao, o indice pode ser enriquecido automaticamente com `intro`, `thumbnailUrl`, `iconUrl` e `coverUrl`
+usando o TitleDB oficial como fonte auxiliar, com fallback de PT-BR para EN.
 
 Para gerar o indice final:
 
