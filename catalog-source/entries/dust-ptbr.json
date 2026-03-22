@@ -2,20 +2,27 @@
   "id": "dust-ptbr",
   "section": "translations",
   "titleId": "0100B6E00A420000",
-  "name": "Dust: An Elysian Tail - PT-BR",
-  "summary": "Traducao em portugues do Brasil para Dust: An Elysian Tail com instalacao por ZIP em layout de SD.",
-  "author": "denis",
+  "name": "Dust: An Elysian Tail (porte PT-BR)",
+  "introPtBr": "Mergulhe em um mundo deslumbrante, pintado à mão, em busca de sua verdadeira identidade. Como o misterioso guerreiro Dust, sua jornada repleta de ação o levará de clareiras pacíficas a picos nevados e muito mais.",
+  "introEnUs": "Immerse yourself in a gorgeous hand-painted world on a search for your true identity. As the mysterious warrior, Dust, your action-packed journey will take you from peaceful glades to snowy mountaintops and beyond.",
+  "summary": "Esse porte e tradução de alta complexidade só foi possível graças aos ensinamentos do mestre Krisp, o compartilhamento e gentileza do Lucaz \"BIG BOSS\" Andrade e o apoio incessante de toda a comunidade \"Aprendendo Romhack\".",
+  "summaryPtBr": "Esse porte e tradução de alta complexidade só foi possível graças aos ensinamentos do mestre Krisp, o compartilhamento e gentileza do Lucaz \"BIG BOSS\" Andrade e o apoio incessante de toda a comunidade \"Aprendendo Romhack\".",
+  "summaryEnUs": "This large-scale and highly complex translation was only possible thanks to the teachings of master \"Krisp\", the kindness of Lucaz \"BIG BOSS\" Andrade, and the unwavering support of the entire \"Learning Romhack\" community.",
+  "author": "denis\nLucaz \"BIG BOSS\" Andrade\nOAleex",
   "packageVersion": "1.06.181214",
   "contentRevision": "2025.12.02",
   "downloadUrl": "https://mega.nz/file/DMt0BToC#-b2bnT-m01A3N6yFhiHf30MP4RpIViXsCeqd-QpcjcQ",
-  "featured": true,
+  "detailsUrl": "https://www.miltraducoes.com/post/tradu%C3%A7%C3%A3o-pt-br-dust-an-elysian-tail",
+  "coverUrl": "https://img-eshop.cdn.nintendo.net/i/77555f0a3cd4b3b6b2cdc5bb5f8fbc14320cbf34f6159c32900e40bb73ad3ffc.jpg",
+  "thumbnailUrl": "https://nekkk.github.io/mil-manager-catalog/thumbs/dust-ptbr.png",
+  "tags": [
+    "traducao",
+    "layeredfs"
+  ],
   "compatibility": {
     "exactGameVersions": [
       "1.06.181214"
     ]
   },
-  "tags": [
-    "traducao",
-    "layeredfs"
-  ]
+  "featured": true
 }
