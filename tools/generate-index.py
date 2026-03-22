@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+import io
 import json
+import os
 import time
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +24,10 @@ TITLEDB_CACHE_TTL_SECONDS = 24 * 60 * 60
 DIST_PATHS = [
     ROOT / "dist" / "index.json",
 ]
+DIST_THUMBS_DIR = ROOT / "dist" / "thumbs"
+ARTWORK_MANIFEST_PATH = CACHE_DIR / "artwork-manifest.json"
+DEFAULT_PUBLIC_BASE_URL = "https://nekkk.github.io/mil-manager-catalog/"
+THUMB_SIZE = 110
 
 REQUIRED_FIELDS = ("id", "section", "titleId", "name", "downloadUrl")
 _TITLEDB_BY_LOCALE = {}
@@ -50,6 +58,12 @@ def download_to_cache(url: str, cache_path: Path) -> None:
     with urllib.request.urlopen(url, timeout=90) as response:
         payload = response.read()
     cache_path.write_bytes(payload)
+
+
+def download_bytes(url: str) -> bytes:
+    request = urllib.request.Request(url, headers={"User-Agent": "MILManagerCatalogGenerator/1.0"})
+    with urllib.request.urlopen(request, timeout=90) as response:
+        return response.read()
 
 
 def load_titledb(locale: str) -> dict:
@@ -111,7 +125,111 @@ def enrich_entry_with_titledb(merged: dict) -> dict:
     return merged
 
 
-def normalize_entry(entry: dict, defaults: dict) -> dict:
+def normalize_public_base_url(source: dict) -> str:
+    base_url = (
+        str(source.get("publicBaseUrl") or "").strip()
+        or os.environ.get("MIL_CATALOG_PUBLIC_BASE_URL", "").strip()
+        or DEFAULT_PUBLIC_BASE_URL
+    )
+    if not base_url.endswith("/"):
+        base_url += "/"
+    return base_url
+
+
+def choose_artwork_urls(entry: dict) -> tuple[str, str]:
+    thumbnail = str(entry.get("thumbnailUrl") or "").strip()
+    icon = str(entry.get("iconUrl") or "").strip()
+    cover = str(entry.get("coverUrl") or "").strip()
+
+    primary = thumbnail or icon or cover
+    fallback = ""
+    for candidate in (icon, cover):
+        if candidate and candidate != primary:
+            fallback = candidate
+            break
+
+    return primary, fallback
+
+
+def load_artwork_manifest() -> dict:
+    try:
+        return json.loads(ARTWORK_MANIFEST_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def save_artwork_manifest(manifest: dict) -> None:
+    ARTWORK_MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
+    ARTWORK_MANIFEST_PATH.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def is_valid_thumb(path: Path) -> bool:
+    if not path.exists():
+        return False
+    try:
+        with Image.open(path) as image:
+            return image.size == (THUMB_SIZE, THUMB_SIZE)
+    except Exception:
+        return False
+
+
+def write_normalized_thumb(payload: bytes, destination_path: Path) -> None:
+    with Image.open(io.BytesIO(payload)) as image:
+        image = image.convert("RGBA")
+        image.thumbnail((THUMB_SIZE, THUMB_SIZE), Image.Resampling.LANCZOS)
+        canvas = Image.new("RGBA", (THUMB_SIZE, THUMB_SIZE), (0, 0, 0, 0))
+        offset_x = (THUMB_SIZE - image.width) // 2
+        offset_y = (THUMB_SIZE - image.height) // 2
+        canvas.alpha_composite(image, (offset_x, offset_y))
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        canvas.save(destination_path, format="PNG")
+
+
+def mirror_thumbnail(entry: dict, public_base_url: str, manifest: dict) -> dict:
+    entry_id = str(entry.get("id") or "").strip()
+    if not entry_id:
+        return entry
+
+    primary_url, fallback_url = choose_artwork_urls(entry)
+    if not primary_url:
+        return entry
+
+    thumb_path = DIST_THUMBS_DIR / f"{entry_id}.png"
+    manifest_entry = manifest.get(entry_id) or {}
+    current = (
+        manifest_entry.get("primaryUrl") == primary_url
+        and manifest_entry.get("fallbackUrl") == fallback_url
+        and manifest_entry.get("size") == THUMB_SIZE
+        and is_valid_thumb(thumb_path)
+    )
+
+    if not current:
+        success = False
+        for candidate in (primary_url, fallback_url):
+            if not candidate:
+                continue
+            try:
+                payload = download_bytes(candidate)
+                write_normalized_thumb(payload, thumb_path)
+                success = is_valid_thumb(thumb_path)
+                if success:
+                    break
+            except Exception:
+                success = False
+        if not success:
+            manifest.pop(entry_id, None)
+            return entry
+
+    manifest[entry_id] = {
+        "primaryUrl": primary_url,
+        "fallbackUrl": fallback_url,
+        "size": THUMB_SIZE,
+    }
+    entry["thumbnailUrl"] = f"{public_base_url}thumbs/{entry_id}.png"
+    return entry
+
+
+def normalize_entry(entry: dict, defaults: dict, public_base_url: str, artwork_manifest: dict) -> dict:
     merged = dict(defaults)
     merged.update(entry)
 
@@ -127,6 +245,7 @@ def normalize_entry(entry: dict, defaults: dict) -> dict:
     merged.setdefault("featured", False)
     merged.setdefault("tags", [])
     merged = enrich_entry_with_titledb(merged)
+    merged = mirror_thumbnail(merged, public_base_url, artwork_manifest)
 
     compatibility = merged.get("compatibility") or {}
     if not isinstance(compatibility, dict):
@@ -139,8 +258,11 @@ def normalize_entry(entry: dict, defaults: dict) -> dict:
 def build_index() -> dict:
     source = load_source()
     defaults = source.get("defaults") or {}
-    entries = [normalize_entry(entry, defaults) for entry in source.get("entries", [])]
+    public_base_url = normalize_public_base_url(source)
+    artwork_manifest = load_artwork_manifest()
+    entries = [normalize_entry(entry, defaults, public_base_url, artwork_manifest) for entry in source.get("entries", [])]
     entries.sort(key=lambda item: (item.get("section", ""), item.get("name", "").lower()))
+    save_artwork_manifest(artwork_manifest)
 
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 

@@ -7,12 +7,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST_INDEX = ROOT / "dist" / "index.json"
+DIST_THUMBS_DIR = ROOT / "dist" / "thumbs"
 SITE_DIR = ROOT / "site"
 SITE_SRC_DIR = ROOT / "site-src"
 SITE_INDEX_JSON = SITE_DIR / "index.json"
 SITE_INDEX_HTML = SITE_DIR / "index.html"
 SITE_NOJEKYLL = SITE_DIR / ".nojekyll"
 SITE_CNAME = SITE_DIR / "CNAME"
+SITE_THUMBS_DIR = SITE_DIR / "thumbs"
 
 
 def build_html(index_data: dict) -> str:
@@ -126,6 +128,10 @@ def main() -> int:
             target_path = SITE_DIR / relative_path
             target_path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source_path, target_path)
+    if DIST_THUMBS_DIR.exists():
+        if SITE_THUMBS_DIR.exists():
+            shutil.rmtree(SITE_THUMBS_DIR)
+        shutil.copytree(DIST_THUMBS_DIR, SITE_THUMBS_DIR)
     SITE_INDEX_JSON.write_text(DIST_INDEX.read_text(encoding="utf-8"), encoding="utf-8")
     SITE_INDEX_HTML.write_text(build_html(index_data), encoding="utf-8")
     SITE_NOJEKYLL.write_text("", encoding="utf-8")
