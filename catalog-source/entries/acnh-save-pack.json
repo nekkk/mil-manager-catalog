@@ -3,12 +3,19 @@
   "section": "savegames",
   "titleId": "01006F8002326000",
   "name": "Animal Crossing: New Horizons - Save Pack",
+  "introPtBr": "Fuja para uma ilha deserta... agora ainda melhor no console Nintendo Switch™ 2!",
+  "introEnUs": "Escape to a deserted island...now enhanced for the Nintendo Switch™ 2 system!",
   "summary": "Exemplo de save distribuido pela mesma estrutura de catalogo.",
+  "summaryPtBr": "Exemplo de save distribuido pela mesma estrutura de catalogo.",
+  "summaryEnUs": "Exemplo de save distribuido pela mesma estrutura de catalogo.",
   "packageVersion": "1.0.0",
   "contentRevision": "2026.03.18",
   "downloadUrl": "https://miltraducoes.com/switch/packages/acnh-save-pack.zip",
+  "coverUrl": "https://img-eshop.cdn.nintendo.net/i/749cb30819c96dc883bf8ac71dfe5a27469b2ea035f81775dd23ab8b8c82bc9d.jpg",
+  "thumbnailUrl": "https://nekkk.github.io/mil-manager-catalog/thumbs/acnh-save-pack.png",
   "tags": [
     "save",
     "backup"
-  ]
+  ],
+  "featured": false
 }
