@@ -3,6 +3,7 @@
   const API_ROOT = "https://api.github.com";
   const METADATA_PATH = "catalog-source/catalog-metadata.json";
   const ENTRIES_PATH = "catalog-source/entries";
+  const GENERATED_INDEX_PATH = "dist/index.json";
 
   const state = {
     config: {
@@ -25,6 +26,7 @@
     entries: [],
     fileShas: new Map(),
     originalPaths: new Map(),
+    derivedEntries: new Map(),
     deletedPaths: new Set(),
     selectedId: null,
     isLoaded: false,
@@ -172,6 +174,17 @@
     return result;
   }
 
+  async function fetchGeneratedIndex() {
+    try {
+      const fetched = await fetchJsonFile(GENERATED_INDEX_PATH);
+      const entries = Array.isArray(fetched.content?.entries) ? fetched.content.entries : [];
+      return entries;
+    } catch (error) {
+      console.warn("Nao foi possivel carregar o indice gerado:", error);
+      return [];
+    }
+  }
+
   function slugify(value) {
     return value
       .normalize("NFD")
@@ -286,6 +299,8 @@
       return;
     }
 
+    const derived = state.derivedEntries.get(entry.id) || {};
+
     els.entryId.value = entry.id || "";
     els.section.value = entry.section || "translations";
     els.titleId.value = entry.titleId || "";
@@ -297,8 +312,8 @@
     els.contentRevision.value = entry.contentRevision || "";
     els.downloadUrl.value = entry.downloadUrl || "";
     els.detailsUrl.value = entry.detailsUrl || "";
-    els.coverUrl.value = entry.coverUrl || "";
-    els.thumbnailUrl.value = entry.thumbnailUrl || "";
+    els.coverUrl.value = entry.coverUrl || derived.coverUrl || "";
+    els.thumbnailUrl.value = entry.thumbnailUrl || derived.thumbnailUrl || derived.iconUrl || "";
     els.tags.value = (entry.tags || []).join(", ");
     els.minGameVersion.value = entry.compatibility?.minGameVersion || "";
     els.maxGameVersion.value = entry.compatibility?.maxGameVersion || "";
@@ -518,13 +533,20 @@
     setStatus("Carregando catálogo do GitHub...");
     const metadataFile = await fetchJsonFile(METADATA_PATH);
     const entryFiles = await fetchEntries();
+    const generatedEntries = await fetchGeneratedIndex();
 
     state.metadata = metadataFile.content;
     state.entries = entryFiles.map((item) => item.content);
     state.originalPaths.clear();
+    state.derivedEntries.clear();
     state.deletedPaths.clear();
     for (const item of entryFiles) {
       state.originalPaths.set(item.content.id, item.path);
+    }
+    for (const entry of generatedEntries) {
+      if (entry && entry.id) {
+        state.derivedEntries.set(entry.id, entry);
+      }
     }
     state.selectedId = state.entries[0]?.id || null;
     state.isLoaded = true;
