@@ -59,7 +59,10 @@
     titleId: document.getElementById("titleId"),
     language: document.getElementById("language"),
     name: document.getElementById("name"),
-    summary: document.getElementById("summary"),
+    introPtBr: document.getElementById("introPtBr"),
+    introEnUs: document.getElementById("introEnUs"),
+    summaryPtBr: document.getElementById("summaryPtBr"),
+    summaryEnUs: document.getElementById("summaryEnUs"),
     author: document.getElementById("author"),
     packageVersion: document.getElementById("packageVersion"),
     contentRevision: document.getElementById("contentRevision"),
@@ -223,7 +226,11 @@
       section: els.section.value.trim(),
       titleId: els.titleId.value.trim().toUpperCase(),
       name: els.name.value.trim(),
-      summary: els.summary.value.trim(),
+      introPtBr: els.introPtBr.value.trim(),
+      introEnUs: els.introEnUs.value.trim(),
+      summary: els.summaryPtBr.value.trim(),
+      summaryPtBr: els.summaryPtBr.value.trim(),
+      summaryEnUs: els.summaryEnUs.value.trim(),
       author: els.author.value.trim(),
       packageVersion: els.packageVersion.value.trim(),
       contentRevision: els.contentRevision.value.trim(),
@@ -278,7 +285,10 @@
         "titleId",
         "language",
         "name",
-        "summary",
+        "introPtBr",
+        "introEnUs",
+        "summaryPtBr",
+        "summaryEnUs",
         "author",
         "packageVersion",
         "contentRevision",
@@ -306,7 +316,10 @@
     els.titleId.value = entry.titleId || "";
     els.language.value = entry.language || "";
     els.name.value = entry.name || "";
-    els.summary.value = entry.summary || "";
+    els.introPtBr.value = entry.introPtBr || entry.intro || derived.introPtBr || derived.intro || "";
+    els.introEnUs.value = entry.introEnUs || derived.introEnUs || "";
+    els.summaryPtBr.value = entry.summaryPtBr || entry.summary || derived.summaryPtBr || derived.summary || "";
+    els.summaryEnUs.value = entry.summaryEnUs || derived.summaryEnUs || "";
     els.author.value = entry.author || "";
     els.packageVersion.value = entry.packageVersion || "";
     els.contentRevision.value = entry.contentRevision || "";
@@ -570,7 +583,11 @@
       section: "translations",
       titleId: "",
       name: "",
+      introPtBr: "",
+      introEnUs: "",
       summary: "",
+      summaryPtBr: "",
+      summaryEnUs: "",
       author: state.metadata.defaults?.author || "M.I.L.",
       language: state.metadata.defaults?.language || "pt-BR",
       detailsUrl: state.metadata.defaults?.detailsUrl || "https://miltraducoes.com/",

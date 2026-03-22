@@ -109,12 +109,13 @@ def enrich_entry_with_titledb(merged: dict) -> dict:
     except Exception:
         return merged
 
-    intro = (pt.get("intro") or "").strip() or (en.get("intro") or "").strip()
+    intro_pt = (pt.get("intro") or "").strip()
+    intro_en = (en.get("intro") or "").strip()
     icon_url = (pt.get("iconUrl") or "").strip() or (en.get("iconUrl") or "").strip()
     banner_url = (pt.get("bannerUrl") or "").strip() or (en.get("bannerUrl") or "").strip()
 
-    if intro and not merged.get("intro"):
-        merged["intro"] = intro
+    merged["_titledbIntroPtBr"] = intro_pt
+    merged["_titledbIntroEnUs"] = intro_en
     if icon_url and not merged.get("thumbnailUrl"):
         merged["thumbnailUrl"] = icon_url
     if icon_url and not merged.get("iconUrl"):
@@ -245,6 +246,21 @@ def normalize_entry(entry: dict, defaults: dict, public_base_url: str, artwork_m
     merged.setdefault("featured", False)
     merged.setdefault("tags", [])
     merged = enrich_entry_with_titledb(merged)
+
+    intro_pt = str(merged.get("introPtBr") or merged.get("intro") or merged.get("_titledbIntroPtBr") or merged.get("_titledbIntroEnUs") or "").strip()
+    intro_en = str(merged.get("introEnUs") or merged.get("_titledbIntroEnUs") or intro_pt).strip()
+    summary_pt = str(merged.get("summaryPtBr") or merged.get("summary") or "").strip()
+    summary_en = str(merged.get("summaryEnUs") or summary_pt).strip()
+
+    merged["introPtBr"] = intro_pt
+    merged["introEnUs"] = intro_en
+    merged["intro"] = intro_pt
+    merged["summaryPtBr"] = summary_pt
+    merged["summaryEnUs"] = summary_en
+    merged["summary"] = summary_pt
+
+    merged.pop("_titledbIntroPtBr", None)
+    merged.pop("_titledbIntroEnUs", None)
     merged = mirror_thumbnail(merged, public_base_url, artwork_manifest)
 
     compatibility = merged.get("compatibility") or {}
