@@ -36,6 +36,9 @@ jobs:
         with:
           python-version: "3.x"
 
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt
+
       - name: Generate catalog
         run: python tools/generate-index.py
 
