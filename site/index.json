@@ -3,7 +3,7 @@
   "channel": "stable",
   "schemaVersion": "1.0",
   "catalogRevision": "2026.03.21.1",
-  "generatedAt": "2026-03-22T13:47:36Z",
+  "generatedAt": "2026-03-22T13:54:38Z",
   "entries": [
     {
       "author": "M.I.L.",
@@ -71,55 +71,55 @@
       "section": "savegames",
       "titleId": "01006F8002326000",
       "name": "Animal Crossing: New Horizons - Save Pack",
+      "introPtBr": "Fuja para uma ilha deserta... agora ainda melhor no console Nintendo Switch™ 2!",
+      "introEnUs": "Escape to a deserted island...now enhanced for the Nintendo Switch™ 2 system!",
       "summary": "Exemplo de save distribuido pela mesma estrutura de catalogo.",
+      "summaryPtBr": "Exemplo de save distribuido pela mesma estrutura de catalogo.",
+      "summaryEnUs": "Exemplo de save distribuido pela mesma estrutura de catalogo.",
       "packageVersion": "1.0.0",
       "contentRevision": "2026.03.18",
       "downloadUrl": "https://miltraducoes.com/switch/packages/acnh-save-pack.zip",
+      "coverUrl": "https://img-eshop.cdn.nintendo.net/i/749cb30819c96dc883bf8ac71dfe5a27469b2ea035f81775dd23ab8b8c82bc9d.jpg",
+      "thumbnailUrl": "https://nekkk.github.io/mil-manager-catalog/thumbs/acnh-save-pack.png",
       "tags": [
         "save",
         "backup"
       ],
       "featured": false,
-      "thumbnailUrl": "https://nekkk.github.io/mil-manager-catalog/thumbs/acnh-save-pack.png",
       "iconUrl": "https://img-eshop.cdn.nintendo.net/i/4a320d37cd85f49d6e4a675b6d7b82f5ad13ae10b212d5b220fe4208c7d7c2f8.jpg",
-      "coverUrl": "https://img-eshop.cdn.nintendo.net/i/749cb30819c96dc883bf8ac71dfe5a27469b2ea035f81775dd23ab8b8c82bc9d.jpg",
-      "introPtBr": "Fuja para uma ilha deserta... agora ainda melhor no console Nintendo Switch™ 2!",
-      "introEnUs": "Escape to a deserted island...now enhanced for the Nintendo Switch™ 2 system!",
       "intro": "Fuja para uma ilha deserta... agora ainda melhor no console Nintendo Switch™ 2!",
-      "summaryPtBr": "Exemplo de save distribuido pela mesma estrutura de catalogo.",
-      "summaryEnUs": "Exemplo de save distribuido pela mesma estrutura de catalogo.",
       "compatibility": {}
     },
     {
-      "author": "denis",
-      "detailsUrl": "https://miltraducoes.com/",
+      "author": "denis\nLucaz \"BIG BOSS\" Andrade\nOAleex",
+      "detailsUrl": "https://www.miltraducoes.com/post/tradu%C3%A7%C3%A3o-pt-br-dust-an-elysian-tail",
       "language": "pt-BR",
       "id": "dust-ptbr",
       "section": "translations",
       "titleId": "0100B6E00A420000",
-      "name": "Dust: An Elysian Tail - PT-BR",
-      "summary": "Traducao em portugues do Brasil para Dust: An Elysian Tail com instalacao por ZIP em layout de SD.",
+      "name": "Dust: An Elysian Tail (porte PT-BR)",
+      "introPtBr": "Mergulhe em um mundo deslumbrante, pintado à mão, em busca de sua verdadeira identidade. Como o misterioso guerreiro Dust, sua jornada repleta de ação o levará de clareiras pacíficas a picos nevados e muito mais.",
+      "introEnUs": "Immerse yourself in a gorgeous hand-painted world on a search for your true identity. As the mysterious warrior, Dust, your action-packed journey will take you from peaceful glades to snowy mountaintops and beyond.",
+      "summary": "Esse porte e tradução de alta complexidade só foi possível graças aos ensinamentos do mestre Krisp, o compartilhamento e gentileza do Lucaz \"BIG BOSS\" Andrade e o apoio incessante de toda a comunidade \"Aprendendo Romhack\".",
+      "summaryPtBr": "Esse porte e tradução de alta complexidade só foi possível graças aos ensinamentos do mestre Krisp, o compartilhamento e gentileza do Lucaz \"BIG BOSS\" Andrade e o apoio incessante de toda a comunidade \"Aprendendo Romhack\".",
+      "summaryEnUs": "This large-scale and highly complex translation was only possible thanks to the teachings of master \"Krisp\", the kindness of Lucaz \"BIG BOSS\" Andrade, and the unwavering support of the entire \"Learning Romhack\" community.",
       "packageVersion": "1.06.181214",
       "contentRevision": "2025.12.02",
       "downloadUrl": "https://mega.nz/file/DMt0BToC#-b2bnT-m01A3N6yFhiHf30MP4RpIViXsCeqd-QpcjcQ",
-      "featured": true,
+      "coverUrl": "https://img-eshop.cdn.nintendo.net/i/77555f0a3cd4b3b6b2cdc5bb5f8fbc14320cbf34f6159c32900e40bb73ad3ffc.jpg",
+      "thumbnailUrl": "https://nekkk.github.io/mil-manager-catalog/thumbs/dust-ptbr.png",
+      "tags": [
+        "traducao",
+        "layeredfs"
+      ],
       "compatibility": {
         "exactGameVersions": [
           "1.06.181214"
         ]
       },
-      "tags": [
-        "traducao",
-        "layeredfs"
-      ],
-      "thumbnailUrl": "https://nekkk.github.io/mil-manager-catalog/thumbs/dust-ptbr.png",
+      "featured": true,
       "iconUrl": "https://img-eshop.cdn.nintendo.net/i/741e12579bd7f31d7573565156635d345c0b521dd0c8bd04263e9f24f4580dfd.jpg",
-      "coverUrl": "https://img-eshop.cdn.nintendo.net/i/77555f0a3cd4b3b6b2cdc5bb5f8fbc14320cbf34f6159c32900e40bb73ad3ffc.jpg",
-      "introPtBr": "Immerse yourself in a gorgeous hand-painted world on a search for your true identity. As the mysterious warrior, Dust, your action-packed journey will take you from peaceful glades to snowy mountaintops and beyond.",
-      "introEnUs": "Immerse yourself in a gorgeous hand-painted world on a search for your true identity. As the mysterious warrior, Dust, your action-packed journey will take you from peaceful glades to snowy mountaintops and beyond.",
-      "intro": "Immerse yourself in a gorgeous hand-painted world on a search for your true identity. As the mysterious warrior, Dust, your action-packed journey will take you from peaceful glades to snowy mountaintops and beyond.",
-      "summaryPtBr": "Traducao em portugues do Brasil para Dust: An Elysian Tail com instalacao por ZIP em layout de SD.",
-      "summaryEnUs": "Traducao em portugues do Brasil para Dust: An Elysian Tail com instalacao por ZIP em layout de SD."
+      "intro": "Mergulhe em um mundo deslumbrante, pintado à mão, em busca de sua verdadeira identidade. Como o misterioso guerreiro Dust, sua jornada repleta de ação o levará de clareiras pacíficas a picos nevados e muito mais."
     },
     {
       "author": "denis",
