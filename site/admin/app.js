@@ -25,6 +25,7 @@
     },
     entries: [],
     fileShas: new Map(),
+    fileContents: new Map(),
     originalPaths: new Map(),
     derivedEntries: new Map(),
     deletedPaths: new Set(),
@@ -154,11 +155,16 @@
     return btoa(binary);
   }
 
+  function serializeJson(value) {
+    return JSON.stringify(value, null, 2) + "\n";
+  }
+
   async function fetchJsonFile(path) {
     const response = await githubFetch(repoApi(path));
     const payload = await response.json();
     const content = JSON.parse(decodeContent(payload.content));
     state.fileShas.set(path, payload.sha);
+    state.fileContents.set(path, serializeJson(content));
     return { content, sha: payload.sha, path };
   }
 
@@ -457,10 +463,15 @@
   }
 
   async function putFile(path, contentObject, message) {
+    const serialized = serializeJson(contentObject);
+    if (state.fileContents.get(path) === serialized) {
+      return { skipped: true };
+    }
+
     const body = {
       message,
       branch: state.config.branch,
-      content: encodeContent(JSON.stringify(contentObject, null, 2) + "\n"),
+      content: encodeContent(serialized),
     };
     const existingSha = state.fileShas.get(path);
     if (existingSha) {
@@ -473,6 +484,7 @@
     });
     const payload = await response.json();
     state.fileShas.set(path, payload.content.sha);
+    state.fileContents.set(path, serialized);
     return payload;
   }
 
@@ -491,6 +503,7 @@
       }),
     });
     state.fileShas.delete(path);
+    state.fileContents.delete(path);
   }
 
   async function publishAll() {
@@ -498,7 +511,7 @@
     saveConfigToStorage();
 
     if (!state.config.owner || !state.config.repo || !state.config.branch || !state.config.token) {
-      throw new Error("Preencha owner, repositório, branch e token antes de publicar.");
+      throw new Error("Preencha owner, reposit\u00f3rio, branch e token antes de publicar.");
     }
 
     saveCurrentEntry(false);
@@ -508,14 +521,19 @@
     for (const entry of state.entries) {
       validateEntry(entry);
       if (usedIds.has(entry.id)) {
-        throw new Error(`ID duplicado no catálogo: ${entry.id}`);
+        throw new Error(`ID duplicado no cat\u00e1logo: ${entry.id}`);
       }
       usedIds.add(entry.id);
     }
 
-    setStatus("Publicando alterações no GitHub...", "");
+    setStatus("Publica\u00e7\u00e3o no GitHub em andamento...", "");
 
-    await putFile(METADATA_PATH, metadataPayload, "catalog: update metadata");
+    let changedFiles = 0;
+
+    const metadataResult = await putFile(METADATA_PATH, metadataPayload, "catalog: update metadata");
+    if (!metadataResult.skipped) {
+      changedFiles += 1;
+    }
 
     for (const entry of state.entries) {
       const newPath = entryPath(entry);
@@ -523,16 +541,25 @@
       if (originalPath && originalPath !== newPath) {
         state.deletedPaths.add(originalPath);
       }
-      await putFile(newPath, entry, `catalog: upsert ${entry.id}`);
+      const result = await putFile(newPath, entry, `catalog: upsert ${entry.id}`);
+      if (!result.skipped) {
+        changedFiles += 1;
+      }
       state.originalPaths.set(entry.id, newPath);
     }
 
     for (const path of Array.from(state.deletedPaths)) {
       await deleteFile(path, `catalog: remove ${path.split("/").pop().replace(".json", "")}`);
       state.deletedPaths.delete(path);
+      changedFiles += 1;
     }
 
-    setStatus("Publicação concluída. O workflow do Pages deve regenerar o índice automaticamente.", "ok");
+    if (changedFiles === 0) {
+      setStatus("Nada mudou no cat\u00e1logo. Nenhum arquivo foi republicado.", "ok");
+      return;
+    }
+
+    setStatus(`Publica\u00e7\u00e3o conclu\u00edda. ${changedFiles} arquivo(s) atualizado(s). O workflow do Pages deve regenerar o \u00edndice automaticamente.`, "ok");
   }
 
   async function loadRepository() {
@@ -540,10 +567,10 @@
     saveConfigToStorage();
 
     if (!state.config.owner || !state.config.repo || !state.config.branch || !state.config.token) {
-      throw new Error("Preencha owner, repositório, branch e token.");
+      throw new Error("Preencha owner, reposit?rio, branch e token.");
     }
 
-    setStatus("Carregando catálogo do GitHub...");
+    setStatus("Carregando cat?logo do GitHub...");
     const metadataFile = await fetchJsonFile(METADATA_PATH);
     const entryFiles = await fetchEntries();
     const generatedEntries = await fetchGeneratedIndex();
@@ -567,7 +594,7 @@
     syncInputsFromMetadata();
     fillEntryForm(findSelectedEntry());
     renderEntryList();
-    setStatus(`Catálogo carregado com ${state.entries.length} entradas.`, "ok");
+    setStatus(`Cat\u00e1logo carregado com ${state.entries.length} entradas.`, "ok");
   }
 
   function createEmptyEntry() {
@@ -613,7 +640,7 @@
     state.selectedId = newEntry.id;
     fillEntryForm(newEntry);
     renderEntryList();
-    setStatus(`Nova entrada pronta para edição: '${newEntry.id}'.`);
+    setStatus(`Nova entrada pronta para edi??o: '${newEntry.id}'.`);
   }
 
   function deleteSelectedEntry() {
